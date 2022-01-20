@@ -4,6 +4,7 @@ const port = 1337
 const cors = require('cors')
 const mongoose = require('mongoose')
 const User = require('./models/usermodel')
+const Article = require('./models/datamodel')
 const jwt = require('jsonwebtoken')
 
 app.use(cors())
@@ -68,6 +69,53 @@ app.post('/api/login', async (req, res) => {
         }
     }catch(err){
         console.log(err);
+    }
+})
+
+app.post('/api/submit', async (req, res) => {
+    try{
+        let img = "https://picsum.photos/1600/1067"
+        if(!req.body.label){
+            res.json({status:'Enter a valid label'})
+        }
+        else if(!req.body.head){
+            res.json({status:'Enter a valid heading'})
+        }
+        else if(!req.body.cat){
+            res.json({status:'Enter a valid category'})
+        }
+        else if(!req.body.content){
+            res.json({status:'Enter a valid summary'})
+        }
+        else if(!req.body.main){
+            res.json({status:'Enter a valid blog'})
+        }
+        else{
+        const data = await Article.create({
+            name: req.body.name,
+            email: req.body.email,
+            label: req.body.label,
+            head: req.body.head,
+            content: req.body.content,
+            cat: req.body.cat,
+            main: req.body.main,
+            image: req.body.image||img
+        })
+        console.log(data)
+        res.json({status:'Article submitted successfully'})
+    }
+    }catch(err){
+        res.json({status: err});
+    }
+})
+
+app.get('/api/getdata', async (req,res) =>{
+    try{
+        const articles = await Article.find()
+        console.log(articles)
+        res.json({data: articles})
+    }catch(err){
+        console.log(err)
     }
 })
 
