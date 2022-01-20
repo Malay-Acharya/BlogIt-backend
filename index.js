@@ -74,7 +74,7 @@ app.post('/api/login', async (req, res) => {
 
 app.post('/api/submit', async (req, res) => {
     try{
-        let img = "https://picsum.photos/1600/1067"
+        let img = "https://picsum.photos/1400/1067"
         if(!req.body.label){
             res.json({status:'Enter a valid label'})
         }
@@ -109,14 +109,25 @@ app.post('/api/submit', async (req, res) => {
     }
 })
 
-app.get('/api/getdata', async (req,res) =>{
+app.get('/api/finddata/:UserId', async (req,res) =>{
     try{
-        const articles = await Article.find()
-        console.log(articles)
+        var id = req.params.UserId.slice(7)
+        console.log(id)
+        const articles = await Article.find({_id : id })
         res.json({data: articles})
     }catch(err){
         console.log(err)
     }
 })
+
+app.get('/api/getdata', async (req,res) =>{
+    try{
+        const articles = await Article.find()
+        res.json({data: articles})
+    }catch(err){
+        console.log(err)
+    }
+})
+
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
