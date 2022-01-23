@@ -1,16 +1,19 @@
 const express = require('express')
 const app = express()
-const port = 1337
+const port = process.env.port || 1337
 const cors = require('cors')
 const mongoose = require('mongoose')
 const User = require('./models/usermodel')
 const Article = require('./models/datamodel')
 const jwt = require('jsonwebtoken')
+const connectDB = require("./Connection")
 
 app.use(cors())
 app.use(express.json())
 
-mongoose.connect('mongodb://localhost:27017/blogit')
+
+
+connectDB();
 
 
 app.post('/api/register', async (req, res) => {
@@ -101,7 +104,6 @@ app.post('/api/submit', async (req, res) => {
             main: req.body.main,
             image: req.body.image||img
         })
-        console.log(data)
         res.json({status:'Article submitted successfully'})
     }
     }catch(err){
